@@ -10,7 +10,7 @@
  * NOTE: You may add code to this file, but do not
  * delete any code or delete any comments.
  *
- * STUDENT NAME: 
+ * STUDENT NAME: Andrew Connor
  */
 
 #ifndef Bible_H
@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -37,6 +38,7 @@ class Bible
       string infile;		// file path name
       ifstream instream;	// input stream, used when file is open
       bool isOpen;			// true if file is open
+      map<Ref, int> bibleIndex;
       // OPTIONAL: you may add variables to keep track of
       // the current line and/or reference when scanning the file
 
@@ -63,6 +65,8 @@ class Bible
 	  
       // OPTIONAL: Return the reference before the given parameter ref
       Ref prev(const Ref ref, LookupResult& status);
+      int buildIndex(string);
+      streampos getOffset(const Ref& ref) const;
 };
 
 #endif //Bible_H

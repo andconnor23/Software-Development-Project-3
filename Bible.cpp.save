@@ -25,19 +25,14 @@ using namespace std;
 Bible::Bible()
 {
    infile = "/home/class/csc3004/Bibles/web-complete";
-   isOpen = false;
-   buildIndex(infile);
 }
 
 // Constructor – pass bible filename
-Bible::Bible(const string s) {
-   isOpen = false;
-   buildIndex(s);
-}
+Bible::Bible(const string s) { infile = s; isOpen = false; }
 
 // REQUIRED: lookup finds a given verse in this Bible
 vector<Verse> Bible::lookup(Ref ref, LookupResult& status, int numberOfVerses)
-{
+{ 
    // TODO: scan the file to retrieve the line that holds ref ...
    instream.open(infile.c_str(), ios::in);
    instream.unsetf(ios::skipws);
@@ -45,50 +40,41 @@ vector<Verse> Bible::lookup(Ref ref, LookupResult& status, int numberOfVerses)
    status = OTHER; // placeholder until retreival is attempted
    isOpen = true;
    vector<Verse> verse(numberOfVerses);
-
-   map<Ref, int>::iterator it;
-
-   it = bibleIndex.find(ref);
-
-   if (it == bibleIndex.end())
-      status = NO_VERSE;
-   else {
-      instream.seekg(it->second);
-      status = SUCCESS;
-   }
-
-//   while (getline(instream, str)){
-//      Ref newRef = Ref(str);
-//      if (newRef.getBook() == ref.getBook()){
+   while (getline(instream, str)){
+      Ref newRef = Ref(str);
+      if (newRef.getBook() == ref.getBook()){
          // update the status variable
-//         if (newRef.getChapter() == ref.getChapter()){
-//            if (newRef.getVerse() == ref.getVerse()){
-//               status = SUCCESS;
-//               verse[0] = Verse(str);
-//	       break;
-//	    }
-//         }
-//	 if (newRef.getChapter() > ref.getChapter()){
-//	    status = NO_VERSE;
-//	    break;
-//	 }
-//      }
-//      if (newRef.getBook() > ref.getBook()){
-//	 status = NO_CHAPTER;
-//	 break;
-//      }
-//   }
-   if (status == SUCCESS){
-      for (int i = 0; i < numberOfVerses; i++){
-	 getline(instream, str);
-   	 Ref newRef = Ref(str);
-	 if (newRef.getBook() > 66 && newRef.getChapter() > 22 && newRef.getVerse() > 21){
-	    break;
+         if (newRef.getChapter() == ref.getChapter()){
+            if (newRef.getVerse() == ref.getVerse()){
+               status = SUCCESS;
+               verse[0] = Verse(str);
+	       break;
+	    }
          }
-   	 verse[i] = Verse(str);
+	 if (newRef.getChapter() > ref.getChapter()){
+	    status = NO_VERSE;
+	    break;
+	 }
+      }
+      if (newRef.getBook() > ref.getBook()){
+	 status = NO_CHAPTER;
+	 break;
       }
    }
-   else cerr << error(status) << endl;
+   if (status == SUCCESS){
+      for (int i = 1; i < numberOfVerses; i++){
+         if (getline(instream, str)){
+   	    Ref newRef = Ref(str);
+	    if (newRef.getBook() > 66 && newRef.getChapter() > 22 && newRef.getVerse() > 21){
+	       break;
+            }
+   	    verse[i] = Verse(str); 
+         }
+      }
+   }
+   if (status != SUCCESS){
+      cerr << error(status) << endl;
+   }
    // default verse, to be replaced by a verse object
    return verse;
 
@@ -138,21 +124,7 @@ void Bible::display()
 // OPTIONAL: Return the reference after the given ref
 Ref Bible::next(const Ref ref, LookupResult& status)
 {
-   map<Ref, int>::iterator it;
-   it = bibleIndex.find(ref);
-
-   if (it == bibleIndex.end()) {
-        status = NO_VERSE;
-        return Ref();
-   }
-
-   ++it;
-   if (it == bibleIndex.end()) {
-        status = NO_VERSE;
-        return Ref();
-   }
-   status == SUCCESS;
-   return it->first;
+   return ref;
 }
 
 // OPTIONAL: Return the reference before the given ref
@@ -162,42 +134,22 @@ Ref Bible::prev(const Ref ref, LookupResult& status)
 }
 
 
+map<Ref, int> bibleIndex;
 
-int Bible::buildIndex(string infile){
+int buildTextIndex (string infile){
    ifstream filestream;
    int position;
    string line;
 
-   filestream.open(infile.c_str(), ios::in);
-   if (!filestream) {
+   filestream.open(infile.c_str(), ios::in)
+   if (!filestream){
       cerr << "Error - can't open input file: " << infile << endl;
-	 return 0;
+   return 0;
    }
 
-   position = filestream.tellg();
-   while (getline(filestream, line)){
-      Ref ref = Ref(line);
-      bibleIndex[ref] = position;
-      if (line.find("Genesis 1:1") != string::npos) {
-         cout << "Found Genesis 1:1 at offset "
-         << position << endl;
-      }
-
-
+   while (!filestream.fail()){
       position = filestream.tellg();
+      getline(filestream, line);
    }
-   return 1;
-}
 
-
-std::streampos Bible::getOffset(const Ref& ref) const {
-    auto it = bibleIndex.find(ref);
-
-    if (it != bibleIndex.end())
-        return it->second;
-
-    return -1;
-}
-
-
-
+   

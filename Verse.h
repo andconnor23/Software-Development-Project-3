@@ -9,7 +9,7 @@
  * NOTE: You may add code to this file, but do not
  * delete any code or delete any comments.
  *
- * STUDENT NAME: 
+ * STUDENT NAME: Andrew Connor
  */
 
 #ifndef Verse_H

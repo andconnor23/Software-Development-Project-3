@@ -10,13 +10,13 @@
  * NOTE: You may add code to this file, but do not
  * delete any code or delete any comments.
  *
- * STUDENT NAME: 
+ * STUDENT NAME: Andrew Connor
  */
 
 #ifndef Ref_H
 #define Ref_H
 
-#include <string> 
+#include <string>
 #include <stdlib.h>
 
 using namespace std;
@@ -37,15 +37,15 @@ class Ref
       Ref(const int, const int, const int); 	// Construct from three integers
       
 	  // Accessors
-      int getBook();	// Access book number
-      int getChapter();	// Access chapter number
-      int getVerse();	// Access verse number
+      int getBook() const;	// Access book number
+      int getChapter() const;	// Access chapter number
+      int getVerse() const;	// Access verse number
       
 	  // REQUIRED Comparison: determine if two references are equal
       bool operator==(Ref &);
 	  
       // OPTIONAL: < and > comparisons for Ref objects might also be useful
-   
+      bool operator<(const Ref& ref) const;
       // REQUIRED: Display the reference on cout, example output: John 3:16
 	  // Your version of display should show the book name
       // corresponding to the stored book number.
