@@ -32,6 +32,7 @@ Bible::Bible()
 // Constructor – pass bible filename
 Bible::Bible(const string s) {
    isOpen = false;
+   infile = s;
    buildIndex(s);
 }
 
@@ -53,9 +54,13 @@ vector<Verse> Bible::lookup(Ref ref, LookupResult& status, int numberOfVerses)
    if (it == bibleIndex.end())
       status = NO_VERSE;
    else {
+      instream.clear();
       instream.seekg(it->second);
       status = SUCCESS;
+      getline(instream, str);
+      verse[0] = Verse(str);
    }
+   
 
 //   while (getline(instream, str)){
 //      Ref newRef = Ref(str);
@@ -79,7 +84,7 @@ vector<Verse> Bible::lookup(Ref ref, LookupResult& status, int numberOfVerses)
 //      }
 //   }
    if (status == SUCCESS){
-      for (int i = 0; i < numberOfVerses; i++){
+      for (int i = 1; i < numberOfVerses; i++){
 	 getline(instream, str);
    	 Ref newRef = Ref(str);
 	 if (newRef.getBook() > 66 && newRef.getChapter() > 22 && newRef.getVerse() > 21){
@@ -174,17 +179,14 @@ int Bible::buildIndex(string infile){
 	 return 0;
    }
 
-   position = filestream.tellg();
-   while (getline(filestream, line)){
-      Ref ref = Ref(line);
-      bibleIndex[ref] = position;
-      if (line.find("Genesis 1:1") != string::npos) {
-         cout << "Found Genesis 1:1 at offset "
-         << position << endl;
-      }
+   while (filestream) {
+   streampos position = filestream.tellg();
 
+   if (!getline(filestream, line)) break;
 
-      position = filestream.tellg();
+   if (line.empty()) continue;
+
+   bibleIndex[Ref(line)] = position;
    }
    return 1;
 }

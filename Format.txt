@@ -1,0 +1,12 @@
+int:book
+int:chapter
+int:verse
+int:numberOfVerses
+
+string:verseText
+
+Request Pipe Format: book:chapter:verse numberOfVerses
+
+Reply Pipe Format: "Verse found: " + verseText
+
+if verse is invalid: "Error: Verse not found."

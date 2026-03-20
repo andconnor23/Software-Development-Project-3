@@ -22,17 +22,29 @@ using namespace std;
  */
 string GetNextToken(string& str, const string& delimiters = " ")
 {
-   // Skip delimiters at beginning                                          
-   string::size_type startPos = str.find_first_not_of(delimiters, 0);
-  
-   // Find position of delimiter at end of token                                           
-   string::size_type endPos = str.find_first_of(delimiters, startPos);
+    // Find first non-delimiter
+   size_t startPos = str.find_first_not_of(delimiters);
 
-   // Found a token, remove it from string, and return it                       
-   string next = str.substr(startPos, endPos - startPos);
-   string rest = str.substr(endPos - startPos + 1, string::npos);
-   str = rest;
-   return(next);
+   // If no token found ? return empty safely
+   if (startPos == string::npos) {
+      str = "";
+      return "";
+   }
+
+   // Find end of token
+   size_t endPos = str.find_first_of(delimiters, startPos);
+
+   // Extract token
+   string next;
+   if (endPos == string::npos) {
+      next = str.substr(startPos);
+      str = "";
+   } else {
+      next = str.substr(startPos, endPos - startPos);
+      str = str.substr(endPos + 1);
+   }
+
+   return next;
 }
 
 // Ref member functions

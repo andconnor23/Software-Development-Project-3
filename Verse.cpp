@@ -30,13 +30,13 @@ Verse::Verse(const string s)
    // store the remainder of the string in verseText
 
    
-  string::size_type startPos = s.find_first_not_of(" ", 0);
+  size_t pos = s.find(' ');
 
-  string::size_type endPos = s.find_first_of(" ", startPos);
-
-  string cut = s.substr(endPos - startPos + 1, string::npos);
-  verseText = cut;
- 
+   if (pos == string::npos) {
+      verseText = "";  // no verse text
+   } else {
+      verseText = s.substr(pos + 1);
+   } 
 
 }  	
 
