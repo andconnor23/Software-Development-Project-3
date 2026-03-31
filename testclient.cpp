@@ -35,12 +35,13 @@ int main () {
   Fifo recfifo(receive_pipe);
   Fifo sendfifo(send_pipe);
 
+  recfifo.openread();
+  sendfifo.openwrite();
 
   while (1){
     cout << "Enter verse: (book:chapter:verse) " << endl;
     cin >> word;
 
-    sendfifo.openwrite();
     sendfifo.send(word);
 
     // prepare the output              
@@ -48,7 +49,6 @@ int main () {
 	 << "Search string: " << word << endl;
 
     // output the response to the web page
-    recfifo.openread();
     string results = "";
     while (results != "$end") {
       results = recfifo.recv();
@@ -56,10 +56,9 @@ int main () {
 	cout << results << endl;
       }
     }
+  }
   recfifo.fifoclose();
   sendfifo.fifoclose();
-  }
- 
   return 0;
 }
   

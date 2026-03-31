@@ -21,7 +21,6 @@ string send_pipe = "reply";
 /* Server main line,create name MAP, wait for and serve requests */
 int main()
 {
-
    /* Create the communication fifos */
    Fifo recfifo(receive_pipe);
    Fifo sendfifo(send_pipe);
@@ -29,27 +28,28 @@ int main()
    Bible bible("/home/class/csc3004/Bibles/web-complete");
    LookupResult result;
    recfifo.openread(); // only open once
+   sendfifo.openwrite();
 
    // "infinite loop" for server: repeat each time a request is received
    while (true)
    {
       string request = recfifo.recv();
       cout << "Requested verses: " << request << endl;
-      int book, chapter, verse, numberOfVerses;
+      int book, chapter, verse;
+      int numberOfVerses = 1;
       sscanf(request.c_str(), "%d:%d:%d", &book, &chapter, &verse);
       Ref ref(book, chapter, verse);
-      Verse v = bible.lookup(ref, result);
-
-      sendfifo.openwrite();
+      vector<Verse> v = bible.lookup(ref, result, numberOfVerses);
 
       if (result == SUCCESS) {
-         sendfifo.send(v.getVerse());
+	 for (int i = 0; i < numberOfVerses; i++){
+            sendfifo.send(v[i].getVerse());
+	 }
       }
       else {
          sendfifo.send("Error: Verse not found");
       }
 
       sendfifo.send("$end");
-      sendfifo.fifoclose();
    }
 }

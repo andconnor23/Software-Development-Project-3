@@ -30,7 +30,7 @@ using namespace std;
 #define MaxMess 1000
 
 // PATH changed from /tmp to special class directory for improved web security
-const string PATH  = "/home/andconnor/csc3004/Project3Demo";
+const string PATH  = "/home/class/csc3004/tmp/";
 
 // SIGniture assures the pipe is unique amoung users
 const string SIG = "andconnor_";

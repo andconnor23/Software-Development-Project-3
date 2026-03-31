@@ -25,7 +25,7 @@ Fifo::Fifo(string name){
 
   umask(0);
   // Create (or open) the fifo
-  int result = mknod(pipename.c_str(),MODE | S_IFIFO, 0);
+  int result = mkfifo(pipename.c_str(),MODE | 0666);
 
   if ((result == -1) && (errno != EEXIST)) {
     cout << "Error creating pipe: " << name << endl;

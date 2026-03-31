@@ -27,14 +27,13 @@ using namespace cgicc;
 #include "fifo.h"
 using namespace std;
 
-#include "textindex.h"
 
 #define logging // enable log file
 #include "logfile.h"
 
 // Pipes for communication
-string receive_pipe = "SSreply";
-string send_pipe = "SSrequest";
+string receive_pipe = "reply";
+string send_pipe = "request";
 
 int main()
 {

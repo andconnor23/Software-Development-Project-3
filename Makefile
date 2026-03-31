@@ -18,7 +18,7 @@ USER= andconnor
 CC= g++
 CFLAGS= -g -std=c++11
 
-all:	testreader
+all:	lookupserver testclient
 
 # TODO: For bibleajax.cgi, add dependencies to include
 # compiled classes from Project 1 to be linked into the executable program
