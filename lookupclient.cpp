@@ -28,6 +28,7 @@ using namespace cgicc;
 using namespace std;
 
 
+#define LOG_FILENAME "/home/class/csc3004/tmp/andconnor-lookupclient.log"
 #define logging // enable log file
 #include "logfile.h"
 
@@ -39,11 +40,22 @@ int main()
 {
    // prepare the response output,
    // send required header before any other output
-   cout << "Content-Type: text/plain\n\n" << endl;
 
+   cout << "Content-Type: text/html\r\n\r\n";
    Cgicc cgi;
-   form_iterator sstring = cgi.getElement("sstring");
-   string searchString = **sstring;
+
+   form_iterator book = cgi.getElement("book");
+   form_iterator chapter = cgi.getElement("chapter");
+   form_iterator verse = cgi.getElement("verse");
+   form_iterator num = cgi.getElement("num_verse");
+
+   string b = (book != cgi.getElements().end()) ? **book : "1";
+   string c = (chapter != cgi.getElements().end() && **chapter != "") ? **chapter : "1";
+   string v = (verse != cgi.getElements().end() && **verse != "") ? **verse : "1";
+   string n = (num != cgi.getElements().end() && **num != "") ? **num : "1";
+
+   string searchString = b + ":" + c + ":" + v + ":" + n;
+
    int length = searchString.length();
 
    Fifo recfifo(receive_pipe);
@@ -66,17 +78,26 @@ int main()
    // output the response to the web page
    string results = "";
    int times = 0; // Counter for header lines
-   while (results != "$end")
+   while (true)
    {
       results = recfifo.recv();
+
+      if (results == "") continue;
+
+      if (results == "$end")
+         break;
+
       log("Reply: "+results);
       if (results != "$end")
       {
-         cout << results << endl;
-         if (times++ > 2)
-         {
-            cout << "<br>";
+         int pos = results.find("|");
+         string text = results;
+
+         if (pos != string::npos) {
+            text = results.substr(pos + 1);
          }
+
+         cout << text << "<br>";
       }
    }
    cout << endl; // flush output when done

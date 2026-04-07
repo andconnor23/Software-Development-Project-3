@@ -1,4 +1,4 @@
-https://cs.mvnu.edu/class/csc3004/USERNAME/bibleajax.html<!-- bibleajax.html
+https://cs.mvnu.edu/class/csc3004/USERNAME/bibleindex.html<!-- bibleajax.html
  -- James Skon Feb 21, 2015
  -- Bob Kasper January 2020: corrected to check for missing search type,
  --     added comments
@@ -73,7 +73,7 @@ https://cs.mvnu.edu/class/csc3004/USERNAME/bibleajax.html<!-- bibleajax.html
 
 
      // NOTE: This page must be loaded from cs.mvnu.edu to avoid a cross-origin request violation.
-     XMLHttp.open("GET", "/class/csc3004/andconnor/cgi-bin/bibleajax.cgi?"
+     XMLHttp.open("GET", "/class/csc3004/andconnor/cgi-bin/lookupclient.cgi?"
                   + "search_type=" + searchType.value
                   + "&book=" + document.getElementById('book').value
                   + "&chapter=" + document.getElementById('chapter').value

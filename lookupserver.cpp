@@ -35,19 +35,18 @@ int main()
    {
       string request = recfifo.recv();
       cout << "Requested verses: " << request << endl;
-      int book, chapter, verse;
-      int numberOfVerses = 1;
-      sscanf(request.c_str(), "%d:%d:%d", &book, &chapter, &verse);
+      int book, chapter, verse, numberOfVerses;
+      sscanf(request.c_str(), "%d:%d:%d:%d", &book, &chapter, &verse, &numberOfVerses);
       Ref ref(book, chapter, verse);
       vector<Verse> v = bible.lookup(ref, result, numberOfVerses);
 
       if (result == SUCCESS) {
-	 for (int i = 0; i < numberOfVerses; i++){
-            sendfifo.send(v[i].getVerse());
+         for (int i = 0; i < v.size(); i++){
+            sendfifo.send("Verse found|" + v[i].getVerse());
 	 }
       }
       else {
-         sendfifo.send("Error: Verse not found");
+         sendfifo.send("Error|Verse not found");
       }
 
       sendfifo.send("$end");
